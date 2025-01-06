@@ -17,10 +17,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '18'
+
+      - name: Clean Environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install
+          npx playwright install
+
+      - name: Fix Playwright Permissions
+        run: chmod +x ./node_modules/.bin/playwright
 
       - name: Run Playwright Tests
         run: npx playwright test

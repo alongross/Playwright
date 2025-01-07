@@ -1,8 +1,17 @@
 {
-    "loginPage": {
-      "usernameField": "#username",
-      "passwordField": "#password",
-      "loginButton": "#login"
-    }
+  "loginPage": {
+    "emailField": "data-test-id=email",
+    "passwordField": "data-test-id=password",
+    "loginButton": "data-test-id=sign-in"
+  },
+  "reportsPage": {
+    "reportsTab": "data-test-id=reports-tab",
+    "wafTab": "data-test-id=waf-tab",
+    "historyTab": "data-test-id=history-tab",
+    "completedRow": "data-test-id=completed-row",
+    "wafURL": "data-test-id=waf-url",
+    "assessmentStatus": "data-test-id=assessment-status",
+    "overallScore": "data-test-id=overall-score",
+    "generateCSVButton": "data-test-id=generate-csv-button"
   }
-  
+}

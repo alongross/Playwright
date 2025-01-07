@@ -1,16 +1,31 @@
 const { test, expect } = require('@playwright/test');
-const HomePage = require('../pages/HomePage');
+const LoginPage = require('../pages/LoginPage');
+const ReportsPage = require('../pages/ReportsPage');
+const validateCSV = require('../utils/validateCSV');
 
-test.describe('Login Feature', () => {
-  let homePage;
+test('Cymulate Task - Validate Flow', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const reportsPage = new ReportsPage(page);
 
-  test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
-    await page.goto('https://example.com/login');
-  });
+  // Navigate to login page
+  await page.goto('https://app.cymulate.com/login', { waitUntil: 'networkidle' });
 
-  test('should log in with valid credentials', async ({ page }) => {
-    await homePage.login('validUser', 'validPassword');
-    await expect(page).toHaveURL('https://example.com/dashboard');
-  });
+  // Login
+  await loginPage.login('candidate_user@cymulate1.com', 'ZzAa!@#$4321');
+
+  // Navigate to Reports -> Web Application Firewall -> History
+  await reportsPage.navigateToHistory();
+
+  // Validate WAF Details
+  const { wafURL, status, score } = await reportsPage.validateWAFDetails();
+  expect(wafURL).toBe('https://ekslabs.cymulatedev.com');
+  expect(status).toBe('Completed');
+  expect(score).toBeGreaterThan(20);
+
+  // Generate and download CSV
+  const isValidCSV = await reportsPage.generateAndDownloadCSV('ekslabs.cymulatedev.com');
+
+  // Validate that the CSV contains the expected content
+  expect(isValidCSV).toBe(true);
+  
 });
